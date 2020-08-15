@@ -39,12 +39,24 @@ The environment requirements are listed as follows:
     * [plane segmentation of ScanNet](https://github.com/NVlabs/planercnn): Please follow the instruction and download the plane segmentation annotations.
 ### Training
 * Before start training, need to clean the plane segementation annotations and do data preprocessing. (will provide related codes soon)
+```bash
+# train the DepthNet without refinement
+python train.py train with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=384 dataset.image_height=256 k_size=9
+
+# train whole model with refinement (one reference image and two source images)
+python train.py train_refine with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=384 dataset.image_height=256 k_size=9
+```
 
 ### Testing
-* predict depth
+* predict disparity and convert to depth (more accurate for near objects, reported in paper)
 
-* predict disparity (more accurate for near objects, reported in paper)
+```bash
+# evaluate the DepthNet without refinement
+python eval.py eval with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=384 dataset.image_height=256 k_size=9
 
+# evaluate whole model with refinement (one reference image and two source images)
+python eval.py eval_refine with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=384 dataset.image_height=256 k_size=9
+```
 
 ### Acknowledgement
 The code partly relies on code from [MVDepthNet](https://github.com/HKUST-Aerial-Robotics/MVDepthNet)
