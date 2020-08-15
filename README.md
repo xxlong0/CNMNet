@@ -41,10 +41,10 @@ The environment requirements are listed as follows:
 * Before start training, need to clean the plane segementation annotations and do data preprocessing. (will provide related codes soon)
 ```bash
 # train the DepthNet without refinement
-python train.py train with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=384 dataset.image_height=256 k_size=9
+python train.py train with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=256 dataset.image_height=192 k_size=9
 
 # train whole model with refinement (one reference image and two source images)
-python train.py train_refine with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=384 dataset.image_height=256 k_size=9
+python train.py train_refine with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=256 dataset.image_height=192 k_size=9
 ```
 
 ### Testing
@@ -52,10 +52,10 @@ python train.py train_refine with dataset.batch_size=5 dataset.root_dir=/path/da
 
 ```bash
 # evaluate the DepthNet without refinement
-python eval.py eval with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=384 dataset.image_height=256 k_size=9
+python eval.py eval with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=256 dataset.image_height=192 k_size=9
 
 # evaluate whole model with refinement (one reference image and two source images)
-python eval.py eval_refine with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=384 dataset.image_height=256 k_size=9
+python eval.py eval_refine with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=256 dataset.image_height=192 k_size=9
 ```
 
 ### Acknowledgement
