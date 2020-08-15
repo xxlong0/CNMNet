@@ -48,7 +48,7 @@ python train.py train_refine with dataset.batch_size=5 dataset.root_dir=/path/da
 ```
 
 ### Testing
-* predict disparity and convert to depth (more accurate for near objects, reported in paper)
+* predict disparity and convert to depth (more accurate for near objects, reported in paper): download [pretrained model](https://drive.google.com/file/d/1tjTIyph8qiPevlIxYcV2knkBScxHMN6W/view?usp=sharing)
 
 ```bash
 # evaluate the DepthNet without refinement
