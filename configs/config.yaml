@@ -1,0 +1,37 @@
+seed: 123
+num_gpus: 1
+num_epochs: 100
+resume_dir: None
+print_interval: 10
+scannet_test_eva_dir: ""
+seven_scenes_eva_dir: ""
+k_size: 9
+resume: False
+
+prob_weight: 20
+normal_weight: 0.8
+
+
+solver:
+  method: adam
+  lr: 0.0001
+  weight_decay: 0.00001
+
+dataset:
+  root_dir: /path/dataset
+  test_dir : ""
+  list_filepath: /path/train_data_list.txt
+  batch_size: 1
+  num_workers: 4
+  image_width: 256
+  image_height: 192
+  depth_scale: 2.0
+
+model:
+  arch: resnet101
+  pretrained: True
+  embed_dims: 2
+  fix_bn: False
+
+
+
