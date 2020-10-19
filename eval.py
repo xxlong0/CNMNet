@@ -911,7 +911,109 @@ def eval_refine_seven_views(_run, _log):
                 np.save(prob_map_filepath, info['prob_map'])
 
 
+@ex.command
+def cal_metrics(_run):
+    cfg = edict(_run.config)
+    dataDir = cfg.seven_scenes_eva_dir
+    GT_DATADIR = "/7_Scenes_dataset/"
 
+    l1_errors = []
+    abs_relative_errors = []
+    sq_rel_errors = []
+    rmse_log_errors = []
+    rmse_errors = []
+    scale_invariant_errors = []
+    a1_errors = []
+    a2_errors = []
+    a3_errors = []
+
+    MIN_DEPTH = 0.01
+    MAX_DEPTH = 8.0
+
+    for scene in sorted(os.listdir(dataDir)):
+        if not os.path.isdir(os.path.join(dataDir, scene)):
+            continue
+        for seq in os.listdir(os.path.join(dataDir, scene)):
+            if not seq.startswith('seq'):
+                continue
+            print(scene, seq)
+            gt_depth_dir = os.path.join(dataDir, scene, seq, "gt_depth")
+            pred_depth_dir = os.path.join(dataDir, scene, seq, "pred_depth")
+
+            for filename in sorted(os.listdir(gt_depth_dir)):
+                if filename.endswith(".npy"):
+                    gt_depth = cv2.imread(
+                        os.path.join(GT_DATADIR, scene, seq, filename.replace("gt_depth.npy", "depth.png")), -1) / 1000.
+
+                    H, W = gt_depth.shape
+
+                    pred_depth = np.load(os.path.join(pred_depth_dir, filename.replace("gt_depth", "pred_depth")))
+                    pred_depth = cv2.resize(pred_depth, (W, H), cv2.INTER_LINEAR)
+                    pred_depth[pred_depth < MIN_DEPTH] = MIN_DEPTH
+                    pred_depth[pred_depth > MAX_DEPTH] = MAX_DEPTH
+                    # pred_depth = pred_depth[0:480, 0:640]
+                    valid_mask = compute_valid_depth_mask(gt_depth, min_thred=MIN_DEPTH, max_thred=MAX_DEPTH)
+                    # pred_depth[pred_depth == 0] = 1e-5
+                    gt_depth = gt_depth[valid_mask]
+                    pred_depth = pred_depth[valid_mask]
+                    l1_error = l1(gt_depth, pred_depth)
+                    abs_relative_error = abs_relative(depth_gt=gt_depth, depth_pred=pred_depth)
+                    rmse_error = rmse(gt_depth, pred_depth)
+                    scale_invariant_error = scale_invariant(gt_depth, pred_depth)
+                    sq_rel_error = sq_relative(pred_depth, gt_depth)
+                    rmse_log_error = rmse_log(gt_depth, pred_depth)
+
+                    a1 = ratio_threshold(gt_depth, pred_depth, 1.25)
+                    a2 = ratio_threshold(gt_depth, pred_depth, 1.25 * 1.25)
+                    a3 = ratio_threshold(gt_depth, pred_depth, 1.25 * 1.25 * 1.25)
+
+                    l1_errors.append(l1_error)
+                    abs_relative_errors.append(abs_relative_error)
+                    rmse_errors.append(rmse_error)
+                    sq_rel_errors.append(sq_rel_error)
+                    rmse_log_errors.append(rmse_log_error)
+                    scale_invariant_errors.append(scale_invariant_error)
+                    a1_errors.append(a1)
+                    a2_errors.append(a2)
+                    a3_errors.append(a3)
+
+    mean_l1_error = np.mean(np.array(l1_errors))
+    mean_abs_relative_error = np.mean(np.array(abs_relative_errors))
+    mean_sq_rel_error = np.mean(np.array(sq_rel_errors))
+    mean_rmse_error = np.mean(np.array(rmse_errors))
+    mean_rmse_log_error = np.mean(np.array(rmse_log_errors))
+    mean_scale_invariant_error = np.mean(np.array(scale_invariant_errors))
+
+    mean_a1_error = np.mean(np.array(a1_errors))
+    mean_a2_error = np.mean(np.array(a2_errors))
+    mean_a3_error = np.mean(np.array(a3_errors))
+    mean_a4_error = np.mean(np.array(a4_errors))
+    mean_a5_error = np.mean(np.array(a5_errors))
+    mean_a6_error = np.mean(np.array(a6_errors))
+    print("mean_l1_error", mean_l1_error)
+    print("a<1.25", mean_a1_error)
+    print("a<1.25^2", mean_a2_error)
+    print("a<1.25^3", mean_a3_error)
+    print("abs.rel", mean_abs_relative_error)
+    print("sq.rel", mean_sq_rel_error)
+    print("rmse", mean_rmse_error)
+    print("rmse_log", mean_rmse_log_error)
+    print("scale.inv", mean_scale_invariant_error)
+
+    file = open(os.path.join(dataDir, "evaluation_errors.txt"), 'w+')
+    file.write("mean_l1_error: " + str(mean_l1_error) + "\n")
+    file.write("a<1.1: " + str(mean_a4_error) + "\n")
+    file.write("a<1.15: " + str(mean_a5_error) + "\n")
+    file.write("a<1.2: " + str(mean_a6_error) + "\n")
+    file.write("a<1.25: " + str(mean_a1_error) + "\n")
+    file.write("a<1.25^2: " + str(mean_a2_error) + "\n")
+    file.write("a<1.25^3: " + str(mean_a3_error) + "\n")
+    file.write("abs.rel: " + str(mean_abs_relative_error) + "\n")
+    file.write("sq.rel: " + str(mean_sq_rel_error) + "\n")
+    file.write("rmse: " + str(mean_rmse_error) + "\n")
+    file.write("rmse log: " + str(mean_rmse_log_error) + "\n")
+    file.write("scale.inv: " + str(mean_scale_invariant_error) + "\n")
+    file.close()
 
 if __name__ == "__main__":
     ex.add_config('./configs/config.yaml')
