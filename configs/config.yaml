@@ -7,6 +7,7 @@ scannet_test_eva_dir: ""
 seven_scenes_eva_dir: ""
 k_size: 9
 resume: False
+idepth_scale: 3.0
 
 prob_weight: 20
 normal_weight: 0.8
@@ -25,13 +26,8 @@ dataset:
   num_workers: 4
   image_width: 256
   image_height: 192
-  depth_scale: 2.0
 
-model:
-  arch: resnet101
-  pretrained: True
-  embed_dims: 2
-  fix_bn: False
+
 
 
 

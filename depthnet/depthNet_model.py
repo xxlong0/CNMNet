@@ -16,7 +16,6 @@ from numpy.linalg import inv
 from .depth_util import process_camera_parameters, get_pixel_coordinates
 
 
-
 def down_conv_layer(input_channels, output_channels, kernel_size, activation_fn=True):
     if activation_fn:
         return nn.Sequential(
@@ -265,6 +264,7 @@ class depthNet(nn.Module):
 
 
 
+
 class DepthRefineNet(nn.Module):
     """
     refine two pred_idepth to get one refined idepth
@@ -368,5 +368,6 @@ class DepthRefineNet(nn.Module):
             return disp_refined, prob_map
         else:
             return disp_refined, prob_map, iconv1_depth
+
 
 

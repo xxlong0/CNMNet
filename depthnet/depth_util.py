@@ -118,16 +118,17 @@ def colorize_uvnormal(uvnormal):
     return color_normal
 
 
-def depth2color(depth, depth_scale):
+
+def depth2color(depth, MIN_DEPTH=0.3, MAX_depth=8.0):
     """
     colorize depth map
     :param depth:
     :return:
     """
     depth_clip = deepcopy(depth)
-    depth_clip[depth_clip < 0.1] = 0
-    depth_clip[depth_clip > depth_scale] = 0
-    normalized = (depth_clip - 0.1) / depth_scale * 255.0
+    depth_clip[depth_clip < MIN_DEPTH] = 0
+    depth_clip[depth_clip > MAX_depth] = 0
+    normalized = (depth_clip - MIN_DEPTH) / (MAX_depth - MIN_DEPTH) * 255.0
     normalized = [normalized, normalized, normalized]
     normalized = np.stack(normalized, axis=0)
     normalized = np.transpose(normalized, (1, 2, 0))
