@@ -48,14 +48,14 @@ python train.py train_refine with dataset.batch_size=5 dataset.root_dir=/path/da
 ```
 
 ### Testing
-* predict disparity and convert to depth (more accurate for near objects, reported in paper): download [pretrained model](https://drive.google.com/file/d/1tjTIyph8qiPevlIxYcV2knkBScxHMN6W/view?usp=sharing)
+* predict disparity and convert to depth (more accurate for near objects, reported in paper): download [pretrained model](https://drive.google.com/file/d/1tQ2mL0o8kTL5HsencJc7NSuolwtqCcgu/view?usp=sharing)
 
 ```bash
 # evaluate the DepthNet without refinement
 python eval.py eval with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=256 dataset.image_height=192 k_size=9
 
 # evaluate whole model with refinement (one reference image and two source images)
-python eval.py eval_refine with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=256 dataset.image_height=192 k_size=9
+python eval.py eval_refine with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.image_width=256 dataset.image_height=192 k_size=9
 ```
 
 ### Acknowledgement
