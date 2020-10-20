@@ -17,8 +17,6 @@ from depthnet.depth_util import np2Depth, Depth2normal, colorize_probmap, normal
 
 import time
 
-
-
 from utils.disp import colors_256 as colors
 
 ex = Experiment()
@@ -317,7 +315,6 @@ def eval(_run, _log):
                 pred_depth_color = depth2color(pred_depth)
                 pred_depth_color_filepath = os.path.join(pred_depth_dir, pred_depth_name)
                 scipy.misc.imsave(pred_depth_color_filepath, pred_depth_color)
-
 
 
 @ex.command
@@ -996,9 +993,7 @@ def eval_refine_seven_views(_run, _log):
 
 
 @ex.command
-def cal_metrics(_run):
-    cfg = edict(_run.config)
-    dataDir = cfg.seven_scenes_eva_dir
+def cal_metrics(dataDir):
     GT_DATADIR = "/home/xiaoxiao/disk6/7_Scenes_dataset/"
 
     l1_errors = []
@@ -1010,7 +1005,6 @@ def cal_metrics(_run):
     a1_errors = []
     a2_errors = []
     a3_errors = []
-
 
     MIN_DEPTH = 0.3
     MAX_DEPTH = 8.0
@@ -1051,9 +1045,6 @@ def cal_metrics(_run):
                     a1 = ratio_threshold(gt_depth, pred_depth, 1.25)
                     a2 = ratio_threshold(gt_depth, pred_depth, 1.25 * 1.25)
                     a3 = ratio_threshold(gt_depth, pred_depth, 1.25 * 1.25 * 1.25)
-                    a4 = ratio_threshold(gt_depth, pred_depth, 1.1)
-                    a5 = ratio_threshold(gt_depth, pred_depth, 1.15)
-                    a6 = ratio_threshold(gt_depth, pred_depth, 1.2)
 
                     l1_errors.append(l1_error)
                     abs_relative_errors.append(abs_relative_error)
@@ -1064,7 +1055,6 @@ def cal_metrics(_run):
                     a1_errors.append(a1)
                     a2_errors.append(a2)
                     a3_errors.append(a3)
-
 
     mean_l1_error = np.mean(np.array(l1_errors))
     mean_abs_relative_error = np.mean(np.array(abs_relative_errors))
@@ -1102,5 +1092,5 @@ def cal_metrics(_run):
 
 if __name__ == "__main__":
     ex.add_config('./configs/config.yaml')
-    ex.run_commandline()
-    # cal_metrics("../evaluations_7_scenes/1/")
+    # ex.run_commandline()
+    cal_metrics("../evaluations_7_scenes_refine/5/")
