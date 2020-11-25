@@ -14,7 +14,7 @@ If you find this project useful for your research, please cite:
 @article{long2020occlusion,
   title={Occlusion-Aware Depth Estimation with Adaptive Normal Constraints},
   author={Long, Xiaoxiao and Liu, Lingjie and Theobalt, Christian and Wang, Wenping},
-  journal={arXiv preprint arXiv:2004.00845},
+  journal={ECCV},
   year={2020}
 }
 ```
@@ -38,7 +38,7 @@ The environment requirements are listed as follows:
     * [7scenes](https://www.microsoft.com/en-us/research/project/rgb-d-dataset-7-scenes/)
     * [plane segmentation of ScanNet](https://github.com/NVlabs/planercnn): Please follow the instruction and download the plane segmentation annotations.
 ### Training
-* Before start training, need to clean the plane segementation annotations and do data preprocessing. (will provide related codes soon)
+* Before start training, need to clean the plane segementation annotations and do data preprocessing.
 ```bash
 # train the DepthNet without refinement
 python train.py train with dataset.batch_size=5 dataset.root_dir=/path/dataset dataset.list_filepath=./scannet/train_plane_view3_scans0_999_interval2_error01.txt dataset.image_width=256 dataset.image_height=192 k_size=9
